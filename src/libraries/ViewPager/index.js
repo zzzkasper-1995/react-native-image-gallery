@@ -12,9 +12,6 @@ import { createResponder } from '../GestureResponder';
 
 const MIN_FLING_VELOCITY = 0.5;
 
-// Dimensions are only used initially.
-// onLayout should handle orientation swap.
-const { width, height } = Dimensions.get('window');
 
 export default class ViewPager extends PureComponent {
     static propTypes = {
@@ -30,7 +27,8 @@ export default class ViewPager extends PureComponent {
         onPageSelected: PropTypes.func,
         onPageScrollStateChanged: PropTypes.func,
         onPageScroll: PropTypes.func,
-        flatListProps: PropTypes.object
+        flatListProps: PropTypes.object,
+        orientation: PropTypes.string
     };
 
     static defaultProps = {
@@ -48,7 +46,10 @@ export default class ViewPager extends PureComponent {
     activeGesture = false;
     gestureResponder = undefined;
 
-    state = { width, height };
+    state = {
+        width: this.props.orientation==='landscape'? Math.max(Dimensions.get('window').width, Dimensions.get('window').height) : Dimensions.get('window').width,
+        height: this.props.orientation==='landscape'? Math.min(Dimensions.get('window').width, Dimensions.get('window').height) : Dimensions.get('window').height
+    };
 
     constructor (props) {
         super(props);
