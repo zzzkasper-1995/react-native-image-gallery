@@ -71,19 +71,22 @@ export default class ViewPager extends PureComponent {
                     this.onPageScrollStateChanged('idle');
                 }
             } else {
-                const curX = this.scroller.getCurrX();
-                this.refs['innerFlatList'] && this.refs['innerFlatList'].scrollToOffset({ offset: curX, animated: false });
+                try{
+                    const curX = this.scroller.getCurrX();
+                    this.refs['innerFlatList'] && this.refs['innerFlatList'].scrollToOffset({ offset: curX, animated: false });
 
-                let position = Math.floor(curX / (this.state.width + this.props.pageMargin));
-                position = this.validPage(position);
-                let offset = (curX - this.getScrollOffsetOfPage(position)) / (this.state.width + this.props.pageMargin);
-                let fraction = (curX - this.getScrollOffsetOfPage(position) - this.props.pageMargin) / this.state.width;
-                if (fraction < 0) {
-                    fraction = 0;
+                    let position = Math.floor(curX / (this.state.width + this.props.pageMargin));
+                    position = this.validPage(position);
+                    let offset = (curX - this.getScrollOffsetOfPage(position)) / (this.state.width + this.props.pageMargin);
+                    let fraction = (curX - this.getScrollOffsetOfPage(position) - this.props.pageMargin) / this.state.width;
+                    if (fraction < 0) {
+                        fraction = 0;
+                    }
+                    this.props.onPageScroll && this.props.onPageScroll({
+                        position, offset, fraction
+                    });
+                } catch(err){
                 }
-                this.props.onPageScroll && this.props.onPageScroll({
-                    position, offset, fraction
-                });
             }
         });
     }
@@ -222,9 +225,13 @@ export default class ViewPager extends PureComponent {
         const finalX = this.getScrollOffsetOfPage(page);
         if (immediate) {
             InteractionManager.runAfterInteractions(() => {
-                this.scroller.startScroll(this.scroller.getCurrX(), 0, finalX - this.scroller.getCurrX(), 0, 0);
-                this.refs['innerFlatList'] && this.refs['innerFlatList'].scrollToOffset({offset: finalX, animated: false});
-                this.refs['innerFlatList'] && this.refs['innerFlatList'].recordInteraction();
+                try{
+                    this.scroller.startScroll(this.scroller.getCurrX(), 0, finalX - this.scroller.getCurrX(), 0, 0);
+                    this.refs['innerFlatList'] && this.refs['innerFlatList'].scrollToOffset({offset: finalX, animated: false});
+                    this.refs['innerFlatList'] && this.refs['innerFlatList'].recordInteraction();
+                }catch(err) {
+
+                }
             });
         } else {
             this.scroller.startScroll(this.scroller.getCurrX(), 0, finalX - this.scroller.getCurrX(), 0, 400);
@@ -326,6 +333,7 @@ export default class ViewPager extends PureComponent {
                   data={pageDataArray}
                   renderItem={this.renderRow}
                   onLayout={this.onLayout}
+                  getItemLayout={this.getItemLayout}
 
                   // use contentOffset instead of initialScrollIndex so that we don't have
                   // to use the buggy 'getItemLayout' prop. See
