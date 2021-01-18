@@ -135,7 +135,6 @@ export default class TransformableImage extends PureComponent {
     renderError () {
         return (this.props.errorComponent && this.props.errorComponent()) || (
             <View style={{ flex: 1, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center' }}>
-                 <Text style={{ color: 'white', fontSize: 15, fontStyle: 'italic' }}>This image cannot be displayed...</Text>
             </View>
         );
     }

@@ -78,9 +78,7 @@ export default class DemoGallery extends Component {
 
     renderError () {
         return (
-            <View style={{ flex: 1, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center' }}>
-                 <Text style={{ color: 'white', fontSize: 15, fontStyle: 'italic' }}>This image cannot be displayed...</Text>
-                 <Text style={{ color: 'white', fontSize: 15, fontStyle: 'italic' }}>... but this is fine :)</Text>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             </View>
         );
     }
